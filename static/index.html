@@ -2,9 +2,22 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Página inicial</title>
+    <title>Página de login</title>
 </head>
 <body>
     <h1>Página de login</h1>
+
+    <form method="POST" id="login" action="/">
+        <label for="email"> Email</label>
+        <input type="text" name="email" id="email"/> 
+        <label for="pass">Senha</label>
+        <input type="password" name="pass" id="pass"/> 
+        <button type="submit">Enviar</button>
+    </form>
+
+    <a href="/public/cadastro.html">
+        <button> Cadastrar</button>
+    </a>
+    
 </body>
 </html>
