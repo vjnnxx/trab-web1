@@ -1,14 +1,28 @@
-const http = require('http');
+/*const express = require('express');
+const app = express();
+const path = require('path');
+const bodyParser = require('body-parser');
 
-const hostname = '127.0.0.1';
-const port = 3000;
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World');
+app.use(bodyParser.urlencoded({extended: true}));
+app.use('/public', express.static(path.join(__dirname,'static')));
+app.get('/', (req, res) =>{
+    res.sendFile(path.join(__dirname, 'static', 'index.html'));
 });
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+
+app.post('/', (req, res) =>{
+    res.sendFile(path.join(__dirname, 'static', 'pag-inicial.html'));
 });
+
+app.listen(3000);*/
+
+var http = require('http');
+var fs = require('fs');
+http.createServer(function (req, res) {
+  fs.readFile('index.html', function(err, data) {
+    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.write(data);
+    return res.end();
+  });
+}).listen(8080);
