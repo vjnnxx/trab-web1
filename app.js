@@ -4,14 +4,25 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
 const app = express();
+const loginController = require('./controller/loginController')
+
+//Estabelece conexão com o banco de dados
+const con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "cad_usuarios"
+});
+
+
+con.connect((err)=>{
+  if (err) throw err;
+  console.log('Conectado!')
+});
 
 //Funções
 const cadastraUsuarios = (nome, email, cpf, dataNasc, telefone, senha ) =>{
-  con.connect((err)=>{
-    if (err) throw err;
-    console.log('Conectado!')
-  });
-
+  
     let sql = "INSERT INTO usuarios (nome, email, cpf, dataNasc, telefone, senha) VALUES (?)";
     let values = [[nome, email, cpf, dataNasc, telefone, senha]];
       
@@ -22,60 +33,6 @@ const cadastraUsuarios = (nome, email, cpf, dataNasc, telefone, senha ) =>{
     
 }
 
-const fazerLogin = async (email, senha) => {
-  con.connect( (err) => {
-    if (err) throw err;
-  });
-      
-  email = email.toString(); 
-    
-  //Query para buscar enviado dentro do bd
-  let sql = ("SELECT email from usuarios WHERE email = " + mysql.escape(email));
-  let regEmail, emailOk;
-  await con.query(sql, (err, result)=> { //Query para verificar se o email corresponde 
-    if (err) throw err;
-
-      regEmail = result[0].email;
-      
-      if(email == regEmail) {
-        emailOk = true;
-      } 
-  });
-  
-  let regSenha, senhaOk;
-  sql = ("SELECT senha from usuarios WHERE email = " + mysql.escape(email));
-  await con.query(sql, (err, result)=>{
-    if (err) throw err;
-        
-    regSenha = result[0].senha; 
-        
-    //console.log(senha, regSenha);
-        
-    bcrypt.compare(senha, regSenha, (err, result)=>{
-      if (err) throw err;
-        
-      if(result){
-        senhaOk = true;
-      }
-    });
-  });
- 
-  
-  console.log(emailOk, senhaOk);
-  let confLogin = false;
-  if(senhaOk && emailOk){
-    confLogin = true;
-  }
-  return confLogin;
-}
-
-//Estabelece conexão com o banco de dados
-const con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "cad_usuarios"
-});
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('/', express.static(path.join(__dirname,'static')));
@@ -91,17 +48,47 @@ app.get('/cadastro', (req, res) =>{
 });
 
 //Path para fazer login no site
-app.post('/',  async (req, res) =>{
-  let email = req.body.email;
-  let senha = req.body.senha;
+app.post('/', (req, res)=>{
+  
+  let email = req.body.email.toString();
+  let senha = req.body.senha.toString(); 
+  let confLogin = false;
+  
 
-  let confLog = fazerLogin(email, senha);
-  console.log("Buiu: " + confLog);
-  if(confLog){
-    res.sendFile(path.join(__dirname, 'static', 'pag-inicial.html'));
-  } else {
-    res.redirect('/');
-  }
+  //Query para buscar enviado dentro do bd
+  let sql = ("SELECT email,senha from usuarios WHERE email = " + mysql.escape(email));
+  let regEmail, emailOk;
+  let regSenha, senhaOk;
+  
+  con.query(sql, (err, result) => { //Query para verificar se o email corresponde 
+    if (err) throw err;
+
+      regEmail = result[0].email;
+      regSenha = result[0].senha; 
+      
+      if(email == regEmail) {
+        emailOk = true;
+        
+      } 
+
+      bcrypt.compare(senha, regSenha, (err, result)=>{
+        if (err) throw err;
+          
+        senhaOk = result;
+        
+        
+        if(senhaOk == true && emailOk == true){ 
+          confLogin = true;
+        }
+        
+        if(confLogin == true){
+          res.sendFile(path.join(__dirname, 'static', 'pag-inicial.html'));
+        } else {
+          res.redirect('/');
+        }
+      });
+  });
+  
 });
 
 //Path para criar registro no sistema
