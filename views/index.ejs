@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Página de login</title>
+</head>
+<body>
+    <h1>Página de login</h1>
+
+    <form method="POST" id="login" action="/">
+        <label for="email"> Email</label>
+        <input type="email" name="email" id="email" required/> 
+        <label for="senha">Senha</label>
+        <input type="password" name="senha" id="senha" required/> 
+        <button type="submit">Enviar</button>
+    </form>
+
+    <a href="./cadastro.html">
+        <button> Cadastrar</button>
+    </a>
+    
+    <div> <%= aviso %></div>
+</body>
+</html>

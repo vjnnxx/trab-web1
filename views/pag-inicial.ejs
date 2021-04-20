@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Página inicial</title>
+    <style>
+        table, th {
+        border: 1px solid black;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="botoes">
+        <a href="/editar">
+            <button>Editar Perfil</button>
+        </a>
+    
+        <a>
+            <button> Sair </button>
+        </a>
+    </div>
+    <br>
+    <form action="/busca" method="POST">
+        <input type="text" placeholder="Insira o usuário que deseja buscar" name="busca" id="busca" required>
+        <button type="submit">Buscar</button>
+    </form>
+    <br>
+    <table>
+        <tr>
+            <th> Nome </th>
+            <th>Email</th>
+            <th>Idade</th>
+        </tr>
+
+        <% for(let i = 0; i < resultados.length; i++){ %>
+        <tr>
+            <th> <%= resultados[i].nome %> </th>
+            <th> <%= resultados[i].email %> </th>
+            <th> <%= resultados[i].idade %> </th>
+        </tr>
+        <% } %>
+
+
+    </table>
+     <br>
+    <div><%= aviso %></div>
+</body>
+</html>
