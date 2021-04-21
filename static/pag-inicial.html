@@ -3,8 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>Página inicial</title>
+    <style>
+        table, th {
+        border: 1px solid black;
+        }
+    </style>
 </head>
 <body>
-    <h1>LOGOU MENOR</h1>
+    <form action="/busca" method="get">
+        <input type="text" name="busca" id="busca">
+        <button type="submit">Buscar</button>
+    </form>
+
+    <table>
+        <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Idade</th>
+        </tr>
+
+        <tr>
+            <th>Cleber</th>
+            <th>cleber@gmail.com</th>
+            <th>18 anos </th>
+        </tr>
+
+
+
+    </table>
 </body>
 </html>

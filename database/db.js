@@ -4,7 +4,7 @@ const con = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  database: "cad_usuarios"
+  database: "web1"
 });
 
 con.connect(function(err) {
@@ -15,7 +15,7 @@ con.connect(function(err) {
   con.query(`CREATE TABLE IF NOT EXISTS usuarios (
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     nome VARCHAR(60) NOT NULL,
-    email VARCHAR(40) NOT NULL, 
+    email VARCHAR(40) UNIQUE NOT NULL, 
     cpf VARCHAR(11) UNIQUE NOT NULL,
     dataNasc DATE NOT NULL,
     telefone VARCHAR(12) NOT NULL, 
