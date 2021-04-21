@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1>Página de cadastro</h1>
-    <form id="cadastro" method="POST" action="/index">
+    <form id="cadastro" method="POST" action="/cadastrar">
         <label for="nome"> Nome</label>
         <input type="text" id="nome" placeholder="Nome" name="nome" required> <br>
         <label for="email">Email</label>
@@ -27,6 +27,9 @@
     </form>
 
     <button onclick="limparCampos();"> Limpar campos</button>
+
+    <div> <%= aviso %></div>
+
     <script src="./utils/limparCampos.js"></script>
     <script src="./utils/formatTel.js"></script>
     <script src="./utils/formatCpf.js"></script>
