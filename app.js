@@ -4,11 +4,9 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
-const flash = require('connect-flash');
-const ejs = require('ejs');
 
 const app = express();
-
+const PORTA = 3000;
 
 //Estabelece conexão com o banco de dados
 const con = mysql.createConnection({
@@ -33,8 +31,6 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }));
-
-app.use(flash());
 
 
 const miliParaAno = (tempo) => { //Transformar o tempo de ms para anos
@@ -396,4 +392,7 @@ app.post('/busca', (req,res)=>{
 
 
 
-app.listen(3000);
+app.listen(PORTA, (err)=>{
+  if (err) console.log ("Erro ao iniciar o servidor");
+  console.log("Servidor rodando na porta: " + PORTA);
+});
