@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Editar</title>
+    
 </head>
 <body>
     <h1>Editar dados</h1>
+    <a  id="sair" href="/sair">Sair</a>
     <form id="editar" method="POST" action="/editar">
         <label for="nome"> Nome</label>
         <input type="text" id="nome" placeholder="Nome" name="nome" value="<%= nome %>"required> <br>
@@ -25,10 +27,13 @@
         <button type="submit">Enviar</button>
         
     </form>
+    <br>
     <a href="/excluir">
         <button>Excluir conta</button>
     </a>
 
+
+    
     
     <script src="../static/utils/limparCampos.js"></script>
     <script src="../static/utils/formatTel.js"></script>

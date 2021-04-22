@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const session = require('express-session');
 const flash = require('connect-flash');
 const ejs = require('ejs');
-const { CONNREFUSED } = require('dns');
+
 const app = express();
 
 
@@ -55,30 +55,47 @@ app.use('/', express.static(path.join(__dirname,'static')));
 
 //Path raiz
 app.get('/', (req, res) =>{
-    res.sendFile(path.join(__dirname, 'static', 'index.html'));
+    res.render('index.ejs', {aviso: ''});
 });
 
 //Path da pagina de cadastro
 app.get('/cadastro', (req, res) =>{
-  res.sendFile(path.join(__dirname, 'static', 'cadastro.html'));
+  res.render('cadastro.ejs', {aviso: ''});
 });
 
-app.get('/editar', (req,res)=>{
-  let email = req.session.email;
-  console.log(email);
-  let nome, cpf, datanasc, telefone;
-  let sql = 'SELECT nome, cpf, dataNasc, telefone FROM usuarios WHERE email = ' + mysql.escape(email);
+//Ir para a pagina de edição
+app.get('/pag-inicial/editar', (req,res)=>{
+  if(req.session.email == undefined){
+    res.redirect('/');
+  } else{
+    console.log(req.session.email);
+   
+    let email = req.session.email;
+    
+    let nome, cpf, datanasc, telefone;
+    let sql = 'SELECT nome, cpf, dataNasc, telefone FROM usuarios WHERE email = ' + mysql.escape(email);
 
-  con.query(sql, (err, result)=>{
-    if (err) throw err;
-    nome = result[0].nome;
-    cpf = result[0].cpf;
-    datanasc = result[0].dataNasc;
-    telefone = result[0].telefone;
-    res.render('./editar.ejs', {nome: nome, email: email, cpf: cpf, telefone: telefone,datanasc: datanasc});
-  });
+    con.query(sql, (err, result)=>{
+      if (err) throw err;
+      nome = result[0].nome;
+      cpf = result[0].cpf;
+      datanasc = result[0].dataNasc;
+      telefone = result[0].telefone;
+      res.render('./editar.ejs', {nome: nome, email: email, cpf: cpf, telefone: telefone,datanasc: datanasc});
+    });
+  }
 });
 
+app.get('/pag-inicial', (req,res)=>{
+  if(req.session.email == undefined){
+    res.redirect('/');
+  } else{
+    console.log(req.session.email);
+    res.render('pag-inicial.ejs', {resultados: [], aviso: ''});
+  }
+});
+
+//Excluir registro
 app.get('/excluir', (req,res)=>{
   let sql = 'DELETE FROM usuarios WHERE email = ' + mysql.escape(req.session.email);
   con.query(sql, (err, result)=>{
@@ -96,12 +113,26 @@ app.get('/excluir', (req,res)=>{
   });
 });
 
+//Path para sair do sistema
+app.get('/sair', (req,res)=>{
+  req.session.destroy((err)=>{
+    if (err){
+      console.log('Erro ao destruir sessão.')
+      throw err;
+    } else {
+      console.log('Sessão terminada com sucesso!')
+      res.redirect('/');
+    }
+  });
+});
+
 //Path para fazer login no site
-app.post('/', (req, res)=>{
+app.post('/pag-inicial', (req, res)=>{
   
   let email = req.body.email.toString();
   let senha = req.body.senha.toString(); 
   let confLogin = false;
+  
   
   //Query para buscar email e senha enviados dentro do bd
   let sql = ("SELECT email,senha from usuarios WHERE email = " + mysql.escape(email));
@@ -110,40 +141,41 @@ app.post('/', (req, res)=>{
   
   con.query(sql, (err, result) => { //Query para verificar se o email corresponde 
     if (err) throw err;
-      console.log(result);
-      regEmail = result[0].email;
-      regSenha = result[0].senha; 
-      
-      if(email == regEmail) {
-        emailOk = true;
-        
-      } 
 
-      bcrypt.compare(senha, regSenha, (err, result)=>{
-        if (err) throw err;
-          
-        senhaOk = result;
+    if (result == false){
+      return res.render('index.ejs', {aviso: 'Login ou senha inválidos!'})
+    }
+    regEmail = result[0].email;
+    regSenha = result[0].senha; 
+    
+    if(email == regEmail) {
+       emailOk = true;
+      
+    } 
+
+    bcrypt.compare(senha, regSenha, (err, result)=>{
+      if (err) throw err;
         
+      senhaOk = result;
         
-        if(senhaOk == true && emailOk == true){ 
-          confLogin = true;
-        }
-        
-        if(confLogin == true){
-          //res.sendFile(path.join(__dirname, 'static', 'pag-inicial.html'));
-          req.session.email = email;
-          res.render('pag-inicial.ejs', {resultados: [], aviso: ''});
-        } else {
-          res.render('index.ejs', {aviso: 'Login ou senha inválidos!'});
-        }
-      });
+      if(senhaOk == true && emailOk == true){ 
+         confLogin = true;
+      }
+      
+     if(confLogin == true){
+        req.session.email = email;
+        res.render('pag-inicial.ejs', {resultados: [], aviso: ''});
+      } else {
+        res.render('index.ejs', {aviso: 'Login ou senha inválidos!'});
+      }
+    });
   });
   
 
 });
 
 //Path para criar registro no sistema
-app.post('/index', async (req, res) =>{
+app.post('/cadastrar', async (req, res) =>{
   
   //Validar dados do form
 
@@ -189,20 +221,44 @@ app.post('/index', async (req, res) =>{
     cpfForm = cpf.replace(/[^0-9]/g, '');
     telefoneForm = telefone.replace(/[^0-9]/g, '');
 
-    //Insere valores no banco de dados 
+
+    let cpfLivre, emailLivre;
     
-    
-    let sql = "INSERT INTO usuarios (nome, email, cpf, dataNasc, telefone, senha) VALUES (?)";
-    let values = [[nomeForm, emailForm, cpfForm, datanascForm, telefoneForm, senhaEncriptada]];
+    let sql = 'SELECT email FROM usuarios where email = ' + mysql.escape(emailForm);
+    con.query(sql, (err, result)=>{
+      if (err) throw err;
       
-    con.query(sql, values, (err, result)=>{
-      if (err) {
-        throw err;
-      };
-      res.render('./index.ejs', {aviso: ''});
-      console.log("Numero de registros inseridos: " + result.affectedRows);
+      if (result == false){
+        emailLivre = true;
+      } else {
+        return res.render('cadastro.ejs', {aviso: 'Email já cadastrado!'});
+      }
     });
 
+    sql = 'SELECT cpf FROM usuarios where cpf = ' + mysql.escape(cpf);
+    con.query(sql, (err, result)=>{
+      if (err) throw err;
+      
+      if (result == false){
+        cpfLivre = true;
+      } else {
+        return res.render('cadastro.ejs', {aviso: 'CPF já cadastrado!'});
+      }
+    });
+
+    //Insere valores no banco de dados 
+    if (cpfLivre == true && emailLivre == true){
+      sql = "INSERT INTO usuarios (nome, email, cpf, dataNasc, telefone, senha) VALUES (?)";
+      let values = [[nomeForm, emailForm, cpfForm, datanascForm, telefoneForm, senhaEncriptada]];
+        
+      con.query(sql, values, (err, result)=>{
+        if (err) {
+          throw err;
+        };
+        res.render('./index.ejs', {aviso: ''});
+        console.log("Numero de registros inseridos: " + result.affectedRows);
+      });
+    } 
     
   }
 });
@@ -296,44 +352,51 @@ app.post('/editar', async (req,res)=>{
       
     });
 
-    res.render('pag-inicial.ejs', {aviso: '', resultados: ''});
+    res.render('pag-inicial.ejs', {aviso: 'Dados alterados com sucesso!', resultados: ''});
 
   }
 });
 
+//Buscar dados no banco
 app.post('/busca', (req,res)=>{
-  let busca = req.body.busca;
-
-  if (busca == ''){
-    res.render('./pag-inicial.ejs', {resultados: [], aviso: 'A barra de busca não pode ficar vazia!'})
-  } else {
-    let sql = `SELECT nome, email, dataNasc FROM usuarios WHERE nome LIKE '` + busca + `%'`;
-    //let sql = 'SELECT nome, email FROM usuarios'
-    var resultados = [];
-    con.query(sql, (err, result)=>{
-      if (err) throw err;
-      
-     
-      var dataAtual = new Date();
-      //console.log('Data de nascimento: ' + datanasc + 'Data atual: ' + dataAtual);
-      
-      for (x in result){
-        let datanasc = result[x].dataNasc;
-        var idade = dataAtual - datanasc;
-        idade = miliParaAno(idade);
-        resultados[x] = {nome: result[x].nome, email: result[x].email, idade: idade};
-      };
-      
-      //Verifica se algum resultado foi encontrados
-      if(resultados == ''){
-        res.render('./pag-inicial.ejs', {resultados: resultados, aviso: 'Nenhum resultado encontrado!'});
-      } else {
-        res.render('./pag-inicial.ejs', {resultados: resultados, aviso: ''});
-      }
-      
-    });
-  }
   
+  if(req.session.email == undefined){
+    res.redirect('/');
+  } else{
+    console.log(req.session.email);
+    
+    let busca = req.body.busca;
+
+    if (busca == ''){
+      res.render('./pag-inicial.ejs', {resultados: [], aviso: 'A barra de busca não pode ficar vazia!'})
+    } else {
+      let sql = `SELECT nome, email, dataNasc FROM usuarios WHERE nome LIKE '` + busca + `%'`;
+      //let sql = 'SELECT nome, email FROM usuarios'
+      var resultados = [];
+      con.query(sql, (err, result)=>{
+        if (err) throw err;
+        
+      
+        var dataAtual = new Date();
+        //console.log('Data de nascimento: ' + datanasc + 'Data atual: ' + dataAtual);
+        
+        for (x in result){
+          let datanasc = result[x].dataNasc;
+          var idade = dataAtual - datanasc;
+          idade = miliParaAno(idade);
+          resultados[x] = {nome: result[x].nome, email: result[x].email, idade: idade};
+        };
+        
+        //Verifica se algum resultado foi encontrados
+        if(resultados == ''){
+          res.render('./pag-inicial.ejs', {resultados: resultados, aviso: 'Nenhum resultado encontrado!'});
+        } else {
+          res.render('./pag-inicial.ejs', {resultados: resultados, aviso: ''});
+        }
+        
+      });
+    }
+  }
   
 });
 
