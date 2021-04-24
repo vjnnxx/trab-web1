@@ -4,11 +4,9 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
-const flash = require('connect-flash');
-const ejs = require('ejs');
 
 const app = express();
-
+const PORTA = 3000;
 
 //Estabelece conexão com o banco de dados
 const con = mysql.createConnection({
@@ -29,12 +27,10 @@ app.set('views', path.join(__dirname, 'views'));
 
 
 app.use(session({
-  secret: "segredo",
+  secret: "trabalhoweb1",
   resave: true,
   saveUninitialized: true
 }));
-
-app.use(flash());
 
 
 const miliParaAno = (tempo) => { //Transformar o tempo de ms para anos
@@ -222,43 +218,37 @@ app.post('/cadastrar', async (req, res) =>{
     telefoneForm = telefone.replace(/[^0-9]/g, '');
 
 
-    let cpfLivre, emailLivre;
+    let emailLivre;
     
     let sql = 'SELECT email FROM usuarios where email = ' + mysql.escape(emailForm);
-    con.query(sql, (err, result)=>{
+    con.query(sql, async (err, result)=>{
       if (err) throw err;
       
-      if (result == false){
+      if (result == false || result == []){
+        console.log(result);
         emailLivre = true;
+        console.log(emailLivre)
+        if (emailLivre == true){
+          //Insere valores no banco de dados 
+          sql = "INSERT INTO usuarios (nome, email, cpf, dataNasc, telefone, senha) VALUES (?)";
+          let values = [[nomeForm, emailForm, cpfForm, datanascForm, telefoneForm, senhaEncriptada]];
+            
+          con.query(sql, values, async (err, result)=>{
+            if (err) {
+              throw err;
+            };
+            res.render('index', {aviso: ''});
+            console.log("Numero de registros inseridos: " + result.affectedRows);
+          });
+        } 
       } else {
         return res.render('cadastro.ejs', {aviso: 'Email já cadastrado!'});
       }
     });
 
-    sql = 'SELECT cpf FROM usuarios where cpf = ' + mysql.escape(cpf);
-    con.query(sql, (err, result)=>{
-      if (err) throw err;
-      
-      if (result == false){
-        cpfLivre = true;
-      } else {
-        return res.render('cadastro.ejs', {aviso: 'CPF já cadastrado!'});
-      }
-    });
 
-    //Insere valores no banco de dados 
-    if (cpfLivre == true && emailLivre == true){
-      sql = "INSERT INTO usuarios (nome, email, cpf, dataNasc, telefone, senha) VALUES (?)";
-      let values = [[nomeForm, emailForm, cpfForm, datanascForm, telefoneForm, senhaEncriptada]];
-        
-      con.query(sql, values, (err, result)=>{
-        if (err) {
-          throw err;
-        };
-        res.render('./index.ejs', {aviso: ''});
-        console.log("Numero de registros inseridos: " + result.affectedRows);
-      });
-    } 
+    
+    
     
   }
 });
@@ -363,7 +353,7 @@ app.post('/busca', (req,res)=>{
   if(req.session.email == undefined){
     res.redirect('/');
   } else{
-    console.log(req.session.email);
+    //console.log(req.session.email);
     
     let busca = req.body.busca;
 
@@ -402,4 +392,7 @@ app.post('/busca', (req,res)=>{
 
 
 
-app.listen(3000);
+app.listen(PORTA, (err)=>{
+  if (err) console.log ("Erro ao iniciar o servidor");
+  console.log("Servidor rodando na porta: " + PORTA);
+});

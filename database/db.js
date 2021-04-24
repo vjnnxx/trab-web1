@@ -16,11 +16,11 @@ con.connect(function(err) {
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     nome VARCHAR(60) NOT NULL,
     email VARCHAR(40) UNIQUE NOT NULL, 
-    cpf VARCHAR(11) UNIQUE NOT NULL,
+    cpf VARCHAR(11) NOT NULL,
     dataNasc DATE NOT NULL,
     telefone VARCHAR(12) NOT NULL, 
-    senha VARCHAR(50) NOT NULL
-  )`, (err, result) => {
+    senha VARCHAR(255) NOT NULL
+  );`, (err, result) => {
     if (err) throw err;
     console.log("Tabela criada!")
   });
