@@ -1,0 +1,154 @@
+html {
+    position: relative;
+    min-height: 100%;
+}   
+body{
+    background-color: lightgray;
+    margin-bottom: -1%;
+    font-family: Arimo, sans-serif;
+    margin: 0 0 60px; 
+    text-align: justify;
+} 
+header {
+    position: relative;
+    width: 99.5%;
+    padding: 5px;
+    background-color: rgba(25, 67, 80, 1);
+    text-align: center;
+    border-radius: 0px 0px 20px 20px;
+    box-shadow: 0px 3px 7px grey;
+}
+h1{
+    margin: 1%;
+}
+footer{
+    position:absolute;
+    bottom: 0px;
+    width: 99.5%;
+    height: 60px;
+    padding: 5px;
+    background-color: rgba(25, 67, 80, 1);
+    text-align: center;
+    border-radius: 20px 20px 0px 0px;
+    box-shadow: 0px 3px 7px grey;
+    color: white;
+}
+.main{
+    color: white;
+    text-shadow: 0.1em 0.1em 0.2em black;
+}
+form{
+    margin-top: 2%;
+}
+#caixa-login {
+    box-sizing: border-box;
+    padding: 30px;
+    text-align: center;
+    max-width: 600px;
+    margin: 2% auto;
+    width: 35%;
+    border: 3px outset gray;
+    border-radius: 15px;
+    box-shadow: 5px 5px 20px black;
+    background-color: rgba(25, 67, 80, 1);
+    min-width: 350px;
+    color: white;
+    text-shadow: 0.1em 0.1em 0.2em black;
+    font-weight: bold;
+}
+input{
+    border: 2px solid darkgray;
+    margin: 10px;
+    width: 75%;
+    height: 2em;
+    text-align: center;
+    border-radius: 15px;
+}
+.main-button{
+    height: 2em;
+    background-color: white;
+    border-radius: 5px;
+    width: 90px;
+    cursor: pointer;
+    margin: 15px 0px;
+    margin-bottom: 0px;
+}
+button{
+    background-color: white;
+    border-radius: 5px;
+    width: 90px;
+    cursor: pointer;
+    margin: 15px 0px;
+    margin-bottom: 0px;
+}
+/* #confirmar-senha{
+    color: darkred;
+} */
+.row {
+    clear: both;
+    margin-bottom: 5.5%;
+}
+
+.column-3 {    
+    width: 25%;    
+}
+
+.column-9 { 
+    margin-top: -2%;   
+    width: 75%;    
+}
+
+.label {
+    padding-top: 7px;
+    text-align: center;    
+}
+
+.label:after {
+    content: ':';
+    padding-right: 5px;
+}
+
+.column {
+    float: left;
+    height: 41px;    
+}
+
+.input input {
+    width: 100%;
+    height: 34px;    
+    padding-left: 5px;
+    box-sizing: border-box;
+}
+.limpar-campos {
+    margin-left: -75%;
+}
+table {
+    background-color: #d993f8;
+    text-align: center;
+    width: 50%;
+    min-width: 300px;
+    margin: auto;
+    border-bottom: 1px solid black;
+    border-top: 1px solid black;
+    border-collapse: collapse;s
+}
+table tr:nth-child(even) {
+    background-color: #b2f893;
+}
+.pesquisa {
+    padding: 5px;
+    background-color: rgba(25, 67, 80, 1);
+    text-align: center;
+    border-radius: 20px 20px 20px 20px;
+    box-shadow: 0px 3px 7px grey;
+    color: white;
+}
+#botoes {
+    margin-top: -2%;
+    margin-right: 1%;
+}
+.aviso{
+    text-align: center;
+    font-weight: bolder;
+    color: red;
+}

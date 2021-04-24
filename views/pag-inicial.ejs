@@ -3,16 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Página inicial</title>
-    <style>
-        table, th {
-        border: 1px solid black;
-        }
-
-    </style>
+    <style><%= mycss.style%></style>
 </head>
 <body>
-
-    <div id="botoes">
+    <header>
+        <h1 class="main">Página principal</h1>
+        <div id="botoes" align="right">
         <a href="pag-inicial/editar">
             <button>Editar Perfil</button>
         </a>
@@ -21,15 +17,17 @@
             <button> Sair </button>
         </a>
     </div>
+    </header>  
+   
     <br>
-    <form action="/busca" method="POST">
+    <form class="pesquisa" action="/busca" method="POST">
         <input type="text" placeholder="Insira o usuário que deseja buscar" name="busca" id="busca" required>
         <button type="submit">Buscar</button>
     </form>
     <br>
-    <table>
+    <table align="center">
         <tr>
-            <th> Nome </th>
+            <th>Nome</th>
             <th>Email</th>
             <th>Idade</th>
         </tr>
@@ -45,6 +43,9 @@
 
     </table>
      <br>
-    <div><%= aviso %></div>
+    <div class="aviso"><%= aviso %></div>
 </body>
+<footer>
+    <h3>© Todos os direitos reservados</h3>
+</footer>
 </html>

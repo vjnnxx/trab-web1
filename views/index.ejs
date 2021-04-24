@@ -1,24 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
+<head>  
     <meta charset="UTF-8">
-    <title>Página de login</title>
+    <title>Página de login</title>   
+    <style><%= mycss.style%></style>
 </head>
 <body>
-    <h1>Página de login</h1>
+    <header>
+        <h1 class="main">Página de login</h1>
+    </header>  
 
-    <form method="POST" id="login" action="/pag-inicial">
-        <label for="email"> Email</label>
-        <input type="email" name="email" id="email" required/> 
-        <label for="senha">Senha</label>
-        <input type="password" name="senha" id="senha" required/> 
-        <button type="submit">Enviar</button>
-    </form>
-
-    <a href="/cadastro">
-        <button> Cadastrar</button>
-    </a>
+    <div id="caixa-login">
+        <form method="POST" id="login" action="/pag-inicial">
+            <label for="email">E-mail:</label>
+            <input type="email" name="email" id="email" placeholder="email@exemplo.com" required/><br><br> 
+            <label for="senha">Senha:</label>
+            <input type="password" name="senha" id="senha" placeholder="****************" required/><br><br>
+            <button class="main-button" type="submit">Entre</button><br><br>
+            ou    
+        </form>
     
-    <div> <%= aviso %></div>
+        <a href="/cadastro">
+            <button class="main-button">Cadastre-se</button>
+        </a>
+    </div>
+    <div class="aviso"> <%= aviso %></div>
 </body>
+<footer>
+    <h3>© Todos os direitos reservados</h3>
+</footer>
 </html>
