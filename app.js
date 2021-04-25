@@ -1,3 +1,6 @@
+//CONFIGURAÇÕES DO SERVIDOR
+// É necessário rodar o arquivo 'db.js' para começar a utilizar
+
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -162,7 +165,18 @@ app.post('/pag-inicial', (req, res)=>{
       
      if(confLogin == true){
         req.session.email = email;
-        res.render('pag-inicial.ejs', {resultados: [], aviso: '', mycss:mycss});
+        sql = "SELECT nome FROM usuarios WHERE email = " + mysql.escape(email);
+        let nome;
+        con.query(sql, (err, result)=>{
+          if (err) throw err;
+
+          if (result){
+            nome = result[0].nome;
+            console.log(nome);
+            res.render('pag-inicial.ejs', {resultados: [], aviso: '', mycss:mycss, nome:nome});
+          }
+        });
+        
       } else {
         res.render('index.ejs', {aviso: 'Login ou senha inválidos!', mycss:mycss});
       }
@@ -391,7 +405,6 @@ app.post('/busca', (req,res)=>{
   }
   
 });
-
 
 
 app.listen(PORTA, (err)=>{

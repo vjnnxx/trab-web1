@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Cadastro</title>
-    <style><%= mycss.style%></style>
+    
 </head>
 <body>
     <header>
@@ -68,16 +68,19 @@
                 </div>
             </div><br>
             <button class="main-button" type="submit">Enviar</button> 
+            <button  type="reset" class="limpar-campos"> Limpar campos</button>
         </form>
-        <button class="limpar-campos" onclick="limparCampos();"> Limpar campos</button>
+        
+        
     </div>
     
 
     <div class="aviso"><%= aviso %></div>
     
-    <script src="./utils/limparCampos.js"></script>
     <script src="./utils/formatTel.js"></script>
     <script src="./utils/formatCpf.js"></script>
+    
+    <style><%= mycss.style%></style>
    
 </body>   
 <footer>

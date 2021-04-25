@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Editar Perfil</title>
-    <style><%= mycss.style%></style>
+    
 </head>
 <body> 
     <header>
@@ -75,17 +75,12 @@
             </div><br>
 
             <button type="submit">Enviar</button>
-            
+            <button type="reset" class="limpar-campos">  Limpar campos</button>
         </form>
-        <a href="/excluir">
-            <button class="limpar-campos">Excluir conta</button>
-        </a>
     </div>    
     <br>
-   
-    <script src="../static/utils/limparCampos.js"></script>
-    <script src="../static/utils/formatTel.js"></script>
-    <script src="../static/utils/formatCpf.js"></script>
+
+    <style> <%= mycss.style %> </style>
 </body>
 <footer>
     <h3>© Todos os direitos reservados</h3>
