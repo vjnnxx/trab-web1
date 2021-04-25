@@ -73,6 +73,16 @@ input{
     margin: 15px 0px;
     margin-bottom: 0px;
 }
+.cadastro-editar-button{
+    height: 2em;
+    background-color: white;
+    border-radius: 5px;
+    width: 90px;
+    cursor: pointer;
+    margin: 15px 0px;
+    margin-bottom: 0px;
+    margin-left: -250px;
+}
 button{
     background-color: white;
     border-radius: 5px;
@@ -120,7 +130,7 @@ button{
     box-sizing: border-box;
 }
 .limpar-campos {
-    margin-left: -75%;
+    margin-left: -68%;
 }
 table {
     background-color: #d993f8;
@@ -145,10 +155,52 @@ table tr:nth-child(even) {
 }
 #botoes {
     margin-top: -2%;
-    margin-right: 1%;
+    margin-right: 2%;
 }
 .aviso{
     text-align: center;
     font-weight: bolder;
     color: red;
+}
+.avatar{
+    float: right;
+    box-sizing: border-box;
+    padding: 10px;
+    text-align: center;
+    max-width: 600px;
+    margin: 2% 1%;
+    width: 15%;
+    border: 3px outset gray;
+    border-radius: 15px;
+    box-shadow: 5px 5px 20px black;
+    background-color: rgb(53, 147, 175);;
+    min-width: 50px;
+    color: white;
+    text-shadow: 0.1em 0.1em 0.2em black;
+    font-weight: bold;
+    margin-top: 130px;
+    display: block;
+}
+.avatar-editar{
+    box-sizing: border-box;
+    padding: 10px;
+    text-align: center;
+    max-width: 600px;
+    margin: 2% 1%;
+    margin-top: -3%;
+    width: 20%;
+    border: 3px outset gray;
+    border-radius: 15px;
+    box-shadow: 5px 5px 20px black;
+    background-color:lightgray;
+    min-width: 50px;
+    color: white;
+    text-shadow: 0.1em 0.1em 0.2em black;
+    font-weight: bold;
+    margin-left: 54.5%;
+    margin-bottom: 1%;
+    display: block;
+}
+#ajeitar{
+    text-decoration: none;
 }

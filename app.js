@@ -172,8 +172,9 @@ app.post('/pag-inicial', (req, res)=>{
 
           if (result){
             nome = result[0].nome;
-            console.log(nome);
-            res.render('pag-inicial.ejs', {resultados: [], aviso: '', mycss:mycss, nome:nome});
+            req.session.nome=nome;
+            console.log(req.session.nome);
+            res.render('pag-inicial.ejs', {resultados: [], aviso: '', mycss:mycss, nome:req.session.nome});
           }
         });
         
@@ -397,7 +398,7 @@ app.post('/busca', (req,res)=>{
         if(resultados == ''){
           res.render('./pag-inicial.ejs', {resultados: resultados, aviso: 'Nenhum resultado encontrado!', mycss:mycss});
         } else {
-          res.render('./pag-inicial.ejs', {resultados: resultados, aviso: '', mycss:mycss});
+          res.render('./pag-inicial.ejs', {resultados: resultados, aviso: '', mycss:mycss, nome:req.session.nome});
         }
         
       });

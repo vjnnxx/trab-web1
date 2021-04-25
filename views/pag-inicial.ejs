@@ -8,17 +8,18 @@
 <body>
     <header>
         <h1 class="main">Página principal</h1>
-        <div id="botoes" align="right">
-        <img src="/images/gato.jpg" alt="Gato">
-        <p>Usuário: <%= nome %></p>
-        <a href="pag-inicial/editar">
-            <button>Editar Perfil</button>
-        </a>
-    
-        <a href="/sair">
-            <button> Sair </button>
-        </a>
-    </div>
+        <div class="avatar">
+            <img src="/images/ninja.png" alt="Gato">
+            <p class="main">Usuário: <%= nome %></p>
+            <div id="botoes" align="center"></div>
+                <a id="ajeitar" href="pag-inicial/editar">
+                    <button>Editar Perfil</button>
+                </a>
+                <a href="/sair">
+                    <button>Sair</button>
+                </a>
+            </div>    
+        </div>
     </header>  
    
     <br>
