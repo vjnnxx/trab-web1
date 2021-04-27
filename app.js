@@ -69,7 +69,7 @@ app.get('/pag-inicial/editar', (req,res)=>{
   if(req.session.email == undefined){
     res.redirect('/');
   } else{
-    console.log(req.session.email);
+    //console.log(req.session.email);
    
     let email = req.session.email;
     
@@ -91,7 +91,7 @@ app.get('/pag-inicial', (req,res)=>{
   if(req.session.email == undefined){
     res.redirect('/');
   } else{
-    console.log(req.session.email);
+    //console.log(req.session.email);
     res.render('pag-inicial.ejs', {resultados: [], aviso: '', mycss:mycss});
   }
 });
@@ -244,7 +244,7 @@ app.post('/cadastrar', async (req, res) =>{
       if (result == false || result == []){
         console.log(result);
         emailLivre = true;
-        console.log(emailLivre)
+        //console.log(emailLivre)
         if (emailLivre == true){
           //Insere valores no banco de dados 
           sql = "INSERT INTO usuarios (nome, email, cpf, dataNasc, telefone, senha) VALUES (?)";
@@ -277,25 +277,25 @@ app.post('/editar', async (req,res)=>{
 
   if(nome == "") {
     console.log("O nome não pode ficar vazio!");
-    return res.redirect("/editar");
+    return res.redirect("/pag-inicial/editar");
   } if (senha !== confsenha) {
     console.log("As senhas não coincidem!");
-     return res.render("/editar.ejs");
+    return res.redirect("/pag-inicial/editar");
   }if(senha == "" || confsenha == ""){
     console.log("Os campos de senha não podem ficar vazios!")
-    return res.render("/editar.ejs");
+    return res.redirect("/pag-inicial/editar");
   } if (email == ""){
     console.log("Preencha o campo de email corretamente!");
-    return res.render("/editar.ejs");
+    return res.redirect("/pag-inicial/editar");
   } if (cpf == ""){
     console.log("Preencha o campo de CPF corretamente!");
-    return res.render("/editar.ejs");
+    return res.redirect("/pag-inicial/editar");
   } if(telefone == ""){
     console.log("Preencha o campo de telefone corretamente!");
-    return res.render("/editar.ejs");
+    return res.redirect("/pag-inicial/editar");
   } if (datanasc == ""){
     console.log("Preencha a data de nascimento corretamente!");
-    return res.render("/editar.ejs");
+    return res.redirect("/pag-inicial/editar");
     
   } else {
     // Garante que os valores do form são strings
@@ -396,7 +396,7 @@ app.post('/busca', (req,res)=>{
         
         //Verifica se algum resultado foi encontrados
         if(resultados == ''){
-          res.render('./pag-inicial.ejs', {resultados: resultados, aviso: 'Nenhum resultado encontrado!', mycss:mycss});
+          res.render('./pag-inicial.ejs', {resultados: resultados, aviso: 'Nenhum resultado encontrado!', mycss:mycss, nome:req.session.nome});
         } else {
           res.render('./pag-inicial.ejs', {resultados: resultados, aviso: '', mycss:mycss, nome:req.session.nome});
         }
