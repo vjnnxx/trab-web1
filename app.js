@@ -373,7 +373,7 @@ app.post('/busca', (req,res)=>{
     //console.log(req.session.email);
     
     let busca = req.body.busca;
-
+    console.log(busca);
     if (busca == ''){
       res.render('./pag-inicial.ejs', {resultados: [], aviso: 'A barra de busca não pode ficar vazia!', mycss:mycss})
     } else {
