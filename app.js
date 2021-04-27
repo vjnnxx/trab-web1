@@ -1,12 +1,17 @@
+//CONFIGURAÇÕES DO SERVIDOR
+// É necessário rodar o arquivo 'db.js' para começar a utilizar
+
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+const fs = require('fs');
 
 const app = express();
 const PORTA = 3000;
+const mycss = {style:fs.readFileSync('./views/estilo.css')}
 
 //Estabelece conexão com o banco de dados
 const con = mysql.createConnection({
@@ -51,12 +56,12 @@ app.use('/', express.static(path.join(__dirname,'static')));
 
 //Path raiz
 app.get('/', (req, res) =>{
-    res.render('index.ejs', {aviso: ''});
+    res.render('index.ejs', {aviso: '', mycss:mycss});
 });
 
 //Path da pagina de cadastro
 app.get('/cadastro', (req, res) =>{
-  res.render('cadastro.ejs', {aviso: ''});
+  res.render('cadastro.ejs', {aviso: '', mycss:mycss});
 });
 
 //Ir para a pagina de edição
@@ -77,7 +82,7 @@ app.get('/pag-inicial/editar', (req,res)=>{
       cpf = result[0].cpf;
       datanasc = result[0].dataNasc;
       telefone = result[0].telefone;
-      res.render('./editar.ejs', {nome: nome, email: email, cpf: cpf, telefone: telefone,datanasc: datanasc});
+      res.render('./editar.ejs', {nome: nome, email: email, cpf: cpf, telefone: telefone,datanasc: datanasc, mycss:mycss});
     });
   }
 });
@@ -87,7 +92,7 @@ app.get('/pag-inicial', (req,res)=>{
     res.redirect('/');
   } else{
     console.log(req.session.email);
-    res.render('pag-inicial.ejs', {resultados: [], aviso: ''});
+    res.render('pag-inicial.ejs', {resultados: [], aviso: '', mycss:mycss});
   }
 });
 
@@ -103,7 +108,7 @@ app.get('/excluir', (req,res)=>{
         throw err;
       } else {
         console.log('Sessão terminada com sucesso!')
-        res.render('index.ejs', {aviso: ''})
+        res.render('index.ejs', {aviso: '', mycss:mycss})
       }
     });
   });
@@ -139,7 +144,7 @@ app.post('/pag-inicial', (req, res)=>{
     if (err) throw err;
 
     if (result == false){
-      return res.render('index.ejs', {aviso: 'Login ou senha inválidos!'})
+      return res.render('index.ejs', {aviso: 'Login ou senha inválidos!', mycss:mycss})
     }
     regEmail = result[0].email;
     regSenha = result[0].senha; 
@@ -160,9 +165,21 @@ app.post('/pag-inicial', (req, res)=>{
       
      if(confLogin == true){
         req.session.email = email;
-        res.render('pag-inicial.ejs', {resultados: [], aviso: ''});
+        sql = "SELECT nome FROM usuarios WHERE email = " + mysql.escape(email);
+        let nome;
+        con.query(sql, (err, result)=>{
+          if (err) throw err;
+
+          if (result){
+            nome = result[0].nome;
+            req.session.nome=nome;
+            console.log(req.session.nome);
+            res.render('pag-inicial.ejs', {resultados: [], aviso: '', mycss:mycss, nome:req.session.nome});
+          }
+        });
+        
       } else {
-        res.render('index.ejs', {aviso: 'Login ou senha inválidos!'});
+        res.render('index.ejs', {aviso: 'Login ou senha inválidos!', mycss:mycss});
       }
     });
   });
@@ -237,12 +254,12 @@ app.post('/cadastrar', async (req, res) =>{
             if (err) {
               throw err;
             };
-            res.render('index', {aviso: ''});
+            res.render('index', {aviso: '', mycss:mycss});
             console.log("Numero de registros inseridos: " + result.affectedRows);
           });
         } 
       } else {
-        return res.render('cadastro.ejs', {aviso: 'Email já cadastrado!'});
+        return res.render('cadastro.ejs', {aviso: 'Email já cadastrado!', mycss:mycss});
       }
     });
 
@@ -342,7 +359,7 @@ app.post('/editar', async (req,res)=>{
       
     });
 
-    res.render('pag-inicial.ejs', {aviso: 'Dados alterados com sucesso!', resultados: ''});
+    res.render('pag-inicial.ejs', {aviso: 'Dados alterados com sucesso!', resultados: '', mycss:mycss});
 
   }
 });
@@ -358,7 +375,7 @@ app.post('/busca', (req,res)=>{
     let busca = req.body.busca;
 
     if (busca == ''){
-      res.render('./pag-inicial.ejs', {resultados: [], aviso: 'A barra de busca não pode ficar vazia!'})
+      res.render('./pag-inicial.ejs', {resultados: [], aviso: 'A barra de busca não pode ficar vazia!', mycss:mycss})
     } else {
       let sql = `SELECT nome, email, dataNasc FROM usuarios WHERE nome LIKE '` + busca + `%'`;
       //let sql = 'SELECT nome, email FROM usuarios'
@@ -379,9 +396,9 @@ app.post('/busca', (req,res)=>{
         
         //Verifica se algum resultado foi encontrados
         if(resultados == ''){
-          res.render('./pag-inicial.ejs', {resultados: resultados, aviso: 'Nenhum resultado encontrado!'});
+          res.render('./pag-inicial.ejs', {resultados: resultados, aviso: 'Nenhum resultado encontrado!', mycss:mycss});
         } else {
-          res.render('./pag-inicial.ejs', {resultados: resultados, aviso: ''});
+          res.render('./pag-inicial.ejs', {resultados: resultados, aviso: '', mycss:mycss, nome:req.session.nome});
         }
         
       });
@@ -389,7 +406,6 @@ app.post('/busca', (req,res)=>{
   }
   
 });
-
 
 
 app.listen(PORTA, (err)=>{

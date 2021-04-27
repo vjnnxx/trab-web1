@@ -4,7 +4,6 @@ const con = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  database: "web1"
 });
 
 con.connect(function(err) {
@@ -12,7 +11,10 @@ con.connect(function(err) {
   console.log("Connected!");
   
   //Cria tabela
-  con.query(`CREATE TABLE IF NOT EXISTS usuarios (
+  con.query(`
+    CREATE DATABASE IF NOT EXITS web1;
+    USE web1;
+    CREATE TABLE IF NOT EXISTS usuarios (
     id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     nome VARCHAR(60) NOT NULL,
     email VARCHAR(40) UNIQUE NOT NULL, 

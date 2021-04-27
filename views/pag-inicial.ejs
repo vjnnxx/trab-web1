@@ -3,33 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Página inicial</title>
-    <style>
-        table, th {
-        border: 1px solid black;
-        }
-
-    </style>
+    
 </head>
 <body>
-
-    <div id="botoes">
-        <a href="pag-inicial/editar">
-            <button>Editar Perfil</button>
-        </a>
-    
-        <a href="/sair">
-            <button> Sair </button>
-        </a>
-    </div>
+    <header>
+        <h1 class="main">Página principal</h1>
+        <div class="avatar">
+            <img src="/images/ninja.png" alt="Gato">
+            <p class="main">Usuário: <%= nome %></p>
+            <div id="botoes" align="center"></div>
+                <a id="ajeitar" href="pag-inicial/editar">
+                    <button>Editar Perfil</button>
+                </a>
+                <a href="/sair">
+                    <button>Sair</button>
+                </a>
+            </div>    
+        </div>
+    </header>  
+   
     <br>
-    <form action="/busca" method="POST">
+    <form class="pesquisa" action="/busca" method="POST">
         <input type="text" placeholder="Insira o usuário que deseja buscar" name="busca" id="busca" required>
         <button type="submit">Buscar</button>
     </form>
     <br>
-    <table>
+    <table align="center">
         <tr>
-            <th> Nome </th>
+            <th>Nome</th>
             <th>Email</th>
             <th>Idade</th>
         </tr>
@@ -45,6 +46,10 @@
 
     </table>
      <br>
-    <div><%= aviso %></div>
+    <div class="aviso"><%= aviso %></div>
+    <style><%= mycss.style%></style>
 </body>
+<footer>
+    <h3>© Todos os direitos reservados</h3>
+</footer>
 </html>
