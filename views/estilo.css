@@ -140,7 +140,7 @@ table {
     margin: auto;
     border-bottom: 1px solid black;
     border-top: 1px solid black;
-    border-collapse: collapse;s
+    border-collapse: collapse;
 }
 table tr:nth-child(even) {
     background-color: #b2f893;
