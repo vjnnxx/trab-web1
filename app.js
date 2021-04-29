@@ -172,8 +172,8 @@ app.post('/pag-inicial', (req, res)=>{
 
           if (result){
             nome = result[0].nome;
-            req.session.nome=nome;
-            console.log(req.session.nome);
+            req.session.nome = nome;
+            //console.log(req.session.nome);
             res.render('pag-inicial.ejs', {resultados: [], aviso: '', mycss:mycss, nome:req.session.nome});
           }
         });
@@ -242,7 +242,7 @@ app.post('/cadastrar', async (req, res) =>{
       if (err) throw err;
       
       if (result == false || result == []){
-        console.log(result);
+        //console.log(result);
         emailLivre = true;
         //console.log(emailLivre)
         if (emailLivre == true){
@@ -359,7 +359,8 @@ app.post('/editar', async (req,res)=>{
       
     });
 
-    res.render('pag-inicial.ejs', {aviso: 'Dados alterados com sucesso!', resultados: '', mycss:mycss});
+    req.session.nome = nome;
+    res.render('pag-inicial.ejs', {aviso: 'Dados alterados com sucesso!', resultados: '', mycss:mycss, nome: req.session.nome});
 
   }
 });
@@ -375,7 +376,7 @@ app.post('/busca', (req,res)=>{
     let busca = req.body.busca;
     console.log(busca);
     if (busca == ''){
-      res.render('./pag-inicial.ejs', {resultados: [], aviso: 'A barra de busca não pode ficar vazia!', mycss:mycss})
+      res.render('./pag-inicial.ejs', {resultados: [], aviso: 'A barra de busca não pode ficar vazia!', mycss:mycss, nome: req.body.nome})
     } else {
       let sql = `SELECT nome, email, dataNasc FROM usuarios WHERE nome LIKE '` + busca + `%'`;
       //let sql = 'SELECT nome, email FROM usuarios'
