@@ -92,7 +92,7 @@ app.get('/pag-inicial', (req,res)=>{
     res.redirect('/');
   } else{
     //console.log(req.session.email);
-    res.render('pag-inicial.ejs', {resultados: [], aviso: '', mycss:mycss});
+    res.render('pag-inicial.ejs', {resultados: [], aviso: '', mycss:mycss, nome: req.session.nome});
   }
 });
 
